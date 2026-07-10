@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一字の扉</title>
+    <!-- Google Fontsの読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&family=Noto+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
+    <!-- 分離したCSSファイルを読み込む記述 -->
+    <link rel="stylesheet" href="トップ.css">
+</head>
+<body>
+
+    <!-- ２段階でやさしく開く扉の構造 -->
+    <div class="opening-title">一字の扉</div>
+    <div class="opening-door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <!-- メニューボタン -->
+    <div class="menu-trigger" id="menuTrigger">
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- 全画面メニュー -->
+    <nav class="smart-menu-overlay" id="menuOverlay">
+        <ul>
+            <li><a href="#top" class="menu-item">トップ</a></li>
+            <li><a href="#about" class="menu-item">サイトについて</a></li>
+            <li><a href="#origin" class="menu-item">言葉の起源</a></li>
+            <li><a href="#kanji" class="menu-item">漢字</a></li>
+            <li><a href="#creator" class="menu-item">制作</a></li>
+        </ul>
+    </nav>
+
+    <!-- 1画面目：タイトル（トップ） -->
+    <section class="section title-section" id="top">
+        <div class="vertical-text">一字の扉</div>
+    </section>
+
+    <!-- 2画面目：サイトについて -->
+    <section class="section about-section" id="about">
+        <div class="about-container">
+            <h2 class="vertical-text about-title">サイトについて</h2>
+            <div class="vertical-text about-body">
+                <p>このサイトは<br>日本ならではの言葉である</p>
+                <div>
+                    <p>「ことわざ」<br>「四字熟語」<br>「大和言葉」<br>「オノマトペ」</p>
+                </div>
+                <p>これらの言葉を<br>一字の漢字から<br>視覚や聴覚によって<br>体験的に学ぶことができるサイトです。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3画面目：言葉の種類と解説セクション -->
+    
+<!-- 3画面目：言葉の種類と解説セクション -->
+    <section class="section words-section" id="origin">
+        <!-- 最初から active を付与して表示させておく -->
+        <div class="explanation-panel active" id="explanationPanel">
+            <!-- ことわざに最初から active を付与 -->
+            <div class="explanation-content active" id="content-kotowaza">
+                <h3>【ことわざ】</h3>
+                <p>説明がきことわざことわざことわざことわざことわざ<br>
+                ああああああああああああああああああああ<br>
+                ああああああああああああああ</p>
+            </div>
+            <div class="explanation-content" id="content-yamato">
+                <h3>【大和言葉】</h3>
+                <p>説明がき大和言葉大和言葉大和言葉大和言葉大和言葉<br>
+                ああああああああああああああああああああ<br>
+                ああああああああああああああ</p>
+            </div>
+            <div class="explanation-content" id="content-yoji">
+                <h3>【四字熟語】</h3>
+                <p>説明がき四字熟語四字熟語四字熟語四字熟語四字熟語<br>
+                ああああああああああ柔軟ああああああああ<br>
+                ああああああああああああああ</p>
+            </div>
+            <div class="explanation-content" id="content-onomato">
+                <h3>【オノマトペ】</h3>
+                <p>説明がきオノマトペオノマトペオノマトペオノマトペオノマトペ<br>
+                ああああああああああああああああああああ<br>
+                ああああああああああああああ</p>
+            </div>
+        </div>
+
+        <!-- ご指示通りの順番に変更、ことわざに最初から active を付与 -->
+        <div class="vertical-text words-container">
+            <div class="word-item active" data-target="kotowaza">ことわざ</div>
+            <div class="word-item" data-target="yamato">大和言葉</div>
+            <div class="word-item" data-target="yoji">四字熟語</div>
+            <div class="word-item" data-target="onomato">オノマトペ</div>
+        </div>
+    </section>
+
+    <!-- 4画面目：花 -->
+    <section class="section kanji-section" id="kanji">
+        <div class="kanji-container">
+            <a href="hana.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">はな</span>
+                    <span class="kanji">花</span>
+                </div>
+            </a>
+            <div class="meaning">flower</div>
+        </div>
+    </section>
+
+    <!-- 5画面目：星 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="hoshi.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">ほし</span>
+                    <span class="kanji">星</span>
+                </div>
+            </a>
+            <div class="meaning">star</div>
+        </div>
+    </section>
+
+    <!-- 6画面目：海 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="umi.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">うみ</span>
+                    <span class="kanji">海</span>
+                </div>
+            </a>
+            <div class="meaning">ocean</div>
+        </div>
+    </section>
+
+    <!-- 7画面目：火 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="hi.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">ひ</span>
+                    <span class="kanji">火</span>
+                </div>
+            </a>
+            <div class="meaning">fire</div>
+        </div>
+    </section>
+
+    <!-- 8画面目：雨 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="雨/雨.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">あめ</span>
+                    <span class="kanji">雨</span>
+                </div>
+            </a>
+            <div class="meaning">rain</div>
+        </div>
+    </section>
+
+    <footer class="footer-section"></footer>
+
+    <script>
+        // 丁寧な2段階オープニングモーションの制御
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. まず中央のタイトルをふんわり出す
+            setTimeout(() => {
+                document.body.classList.add('start-title');
+            }, 300);
+
+            // 2. タイトルを静かに消す
+            setTimeout(() => {
+                document.body.classList.add('fade-title');
+            }, 1600);
+
+            // 3. 最後に扉が左右に開く
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 2100);
+        });
+
+        // メニュー開閉用
+        const trigger = document.getElementById('menuTrigger');
+        const overlay = document.getElementById('menuOverlay');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        function toggleMenu() {
+            trigger.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        trigger.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+
+        // ホバーによる解説パネル制御
+        // ホバーによる解説パネル制御（中央ふわっと切り替え版）
+        const wordItems = document.querySelectorAll('.word-item');
+        const contents = document.querySelectorAll('.explanation-content');
+
+        wordItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const targetId = item.getAttribute('data-target');
+                
+                // すべての選択状態と解説コンテンツを一旦クリア
+                wordItems.forEach(w => w.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+                
+                // ホバーしたアイテムと対応する解説をアクティブにする
+                item.classList.add('active');
+                const targetContent = document.getElementById(`content-${targetId}`);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
