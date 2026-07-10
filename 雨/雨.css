@@ -1,0 +1,333 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0d1b2a;
+    font-family: "Yu Mincho", "游明朝", YuMincho, serif;
+}
+
+.stage-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: calc(100vw * 9 / 16);
+    max-height: 100vh;
+    max-width: calc(100vh * 16 / 9);
+    background-image: url('雨背景.jpg'); 
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+/* 晴れ間モード時の太陽の日差しオーバーレイを追加 */
+.stage-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 左上から右下へ降り注ぐ強い光芒をグラデーションで表現 */
+    background: linear-gradient(135deg, rgba(255, 253, 230, 0.4) 0%, rgba(255, 245, 200, 0.15) 50%, transparent 80%);
+    pointer-events: none;
+    z-index: 8;
+    opacity: 0;
+    mix-blend-mode: overlay;
+    transition: opacity 1.2s ease;
+}
+
+.rain-char {
+    position: absolute;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 2px rgba(255, 255, 255, 1);
+    user-select: none;
+    cursor: pointer;
+    z-index: 10;
+    writing-mode: vertical-rl;
+    will-change: transform, top, left, opacity; 
+    opacity: 1;
+}
+.phrase-paused {
+    color: #cbebff !important;
+    text-shadow: 0 0 12px rgba(173, 224, 255, 1), 0 0 4px rgba(255, 255, 255, 1) !important;
+    z-index: 20;
+}
+
+.audio-notice {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 16px;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 0.5s ease;
+}
+
+.audio-control-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 150;
+    background: rgba(252, 250, 242, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    padding: 8px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: background 0.3s, border 0.3s;
+}
+.audio-control-btn:hover {
+    background: rgba(252, 250, 242, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.meaning-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 40%;
+    max-width: 450px;
+    background-color: rgba(252, 250, 242, 0.96);
+    border: 1px solid #e2dfd5;
+    border-radius: 24px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+    padding: 40px;
+    box-sizing: border-box;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s;
+    text-align: center;
+}
+.meaning-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+.meaning-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #3a3a3a;
+    margin-bottom: 15px;
+    letter-spacing: 0.1em;
+}
+.meaning-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555555;
+    text-align: left;
+    background: rgba(255,255,255,0.5);
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+.meaning-close-btn {
+    background: #4a4a4a;
+    color: #ffffff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    transition: background 0.3s;
+}
+.meaning-close-btn:hover {
+    background: #333333;
+}
+
+/* 雨の線エフェクト：存在感を出すためにアルファ値を最大0.95まで増強 */
+.rain-line {
+    position: absolute;
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.95)); 
+    pointer-events: none; 
+    z-index: 5; 
+    will-change: top;
+}
+
+/* ==========================================================================
+   追加：ホバー時の環境変化（明るさ・雷エフェクト）用スタイル
+   ========================================================================== */
+
+.stage-container {
+    transition: filter 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 1. 雷雨モード：触れた瞬間の激しい雷光フラッシュ */
+@keyframes thunder-flash {
+    0% { filter: brightness(2.6) contrast(1.4); }      
+    2% { filter: brightness(1.0) saturate(1.2); }
+    4% { filter: brightness(2.2) contrast(1.3); }      
+    7%, 85% { filter: brightness(0.7) contrast(1.1); }  
+    87% { filter: brightness(2.4) contrast(1.3); }     
+    89% { filter: brightness(0.9) saturate(1.1); }
+    91% { filter: brightness(2.2) contrast(1.2); }
+    94%, 100% { filter: brightness(0.7) contrast(1.1); }
+}
+.effect-thunder {
+    animation: thunder-flash 5s infinite;
+}
+
+/* 2. 晴れ間モード：日差しを可視化 */
+.effect-sunny {
+    filter: brightness(1.4) saturate(1.15) sepia(0.02);
+}
+.effect-sunny::after {
+    opacity: 1; /* 晴れ間モードの時だけ日差しの斜光線を浮かび上がらせる */
+}
+
+/* 3. 強風モード */
+.effect-wind {
+    filter: brightness(0.85) contrast(0.9);
+}
+
+/* 4. しとしとモード */
+.effect-quiet {
+    filter: brightness(0.75) saturate(0.9);
+}
+
+/* ==========================================================================
+   追加：トップページ共通UI・扉アニメーションの移植
+   ========================================================================== */
+
+.audio-control-btn {
+    right: 90px !important; 
+}
+
+.menu-trigger, .smart-menu-overlay {
+    font-family: "Noto Serif JP", serif;
+}
+
+.opening-door-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 999;
+    pointer-events: none;
+    display: flex;
+}
+
+.door {
+    width: 50%;
+    height: 100vh;
+    background-color: #333333; 
+    position: absolute;
+    top: 0;
+    transition: transform 1.6s cubic-bezier(0.66, 0, 0.2, 1);
+}
+
+.door-left {
+    left: 0;
+    transform: translateX(0);
+    border-right: 1px solid #444444;
+}
+
+.door-right {
+    right: 0;
+    transform: translateX(0);
+    border-left: 1px solid #444444;
+}
+
+body.loaded .door-left {
+    transform: translateX(-100%);
+}
+body.loaded .door-right {
+    transform: translateX(100%);
+}
+
+.menu-trigger {
+    position: fixed;
+    top: 25px; 
+    right: 40px;
+    z-index: 1000; 
+    cursor: pointer;
+    width: 28px;
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu-trigger span {
+    display: block;
+    width: 100%;
+    height: 1.5px;
+    background-color: #ffffff; 
+    transition: transform 0.4s ease, background-color 0.4s ease;
+}
+
+.menu-trigger.active span {
+    background-color: #3a3a3a;
+}
+
+.menu-trigger.active span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+}
+.menu-trigger.active span:nth-child(2) {
+    transform: translateY(-6.5px) rotate(-45deg);
+}
+
+.smart-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(252, 250, 242, 0.98); 
+    z-index: 950;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.smart-menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.smart-menu-overlay ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    gap: 50px;
+}
+
+.smart-menu-overlay li a {
+    color: #3a3a3a; 
+    text-decoration: none;
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    font-weight: 500;
+    transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.smart-menu-overlay li a:hover {
+    opacity: 0.5;
+}
