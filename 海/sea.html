@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海の扉</title>
+    <style>
+        /* 画面全体の基本設定 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1a6099;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* 海の背景エリア */
+        .ocean-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-image: url('海背景.jpg'); /* ⚠️ボートが描かれていない海だけの画像 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* 🌟 画面中央に固定するボートのスタイル */
+        .boat {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 画面の真ん中にぴったり配置 */
+            width: 150px; /* ボートのサイズ（お好みで調整してください） */
+            height: auto;
+            z-index: 50; /* 魚（奥）とオーバーレイ（手前）の間に配置 */
+            cursor: pointer;
+            
+            /* 長押し時に画像が選択されたりドラッグされたりするのを防ぐ */
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+            
+            /* 動きにリアルさを出すための少しの揺れアニメーション（任意） */
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        /* ボートがプカプカ浮いているような微細なアニメーション */
+        @keyframes floating {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
+            50% { transform: translate(-50%, -50%) translateY(-5px) rotate(1deg); }
+        }
+
+        /* 流れる生き物たちの共通スタイル */
+        .sea-creature {
+            position: absolute;
+            top: -250px; 
+            pointer-events: none;
+            will-change: transform, opacity;
+            z-index: 20; /* ボートより奥を流す */
+        }
+
+        /* グレースケールオーバーレイの設定 */
+        .grayscale-overlay {
+            position: fixed;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background-image: url('グレースケール 海.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 60; /* 一番手前（ただしpointer-events: noneなのでクリックは貫通します） */
+            pointer-events: none;
+            opacity: 0.6; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ocean-container" id="ocean">
+        <img src="boat.png" alt="ボート" class="boat" id="boat">
+        
+        <div class="grayscale-overlay"></div>
+    </div>
+
+    <audio id="bgm" src="https://images.earthcam.com/ec_stills/ow_sounds/stream.mp3" loop></audio>
+
+    <script>
+        const normalPool = [
+            '魚2.png', '魚2.png', '魚2.png', '魚2.png',
+            '魚３.png', '魚３.png', '魚３.png'
+        ];
+
+        const rarePool = [
+            '魚１.png',
+            '魚４.png',
+            '魚５.png'
+        ];
+
+        const ocean = document.getElementById('ocean');
+        let spawnCount = 0;
+
+        let isFastMode = false;
+        let activeAnimations = [];
+
+        function createCreature(isInitial = false) {
+            const img = document.createElement('img');
+            let randomImage = '';
+
+            if (isInitial) {
+                randomImage = normalPool[Math.floor(Math.random() * normalPool.length)];
+            } else {
+                spawnCount++;
+                if (spawnCount >= 6) {
+                    randomImage = rarePool[Math.floor(Math.random() * rarePool.length)];
+                    spawnCount = 0;
+                } else {
+                    randomImage = normalPool[Math.floor(Math.random() * normalPool.length)];
+                }
+            }
+
+            img.src = randomImage;
+            img.classList.add('sea-creature');
+
+            const isLeft = Math.random() < 0.5;
+            let randomX = 0;
+            if (isLeft) {
+                randomX = Math.random() * 30;
+            } else {
+                randomX = 70 + (Math.random() * 20);
+            }
+            img.style.left = `${randomX}%`;
+
+            let baseWidth = 60;
+            if (randomImage === '魚2.png') baseWidth = 30;
+            if (randomImage === '魚３.png') baseWidth = 72;
+            if (randomImage === '魚１.png') baseWidth = 50;
+            if (randomImage === '魚４.png') baseWidth = 60;
+            if (randomImage === '魚５.png') baseWidth = 180;
+
+            const sizeMultiplier = 0.8 + Math.random() * 0.4;
+            img.style.width = `${baseWidth * sizeMultiplier}px`;
+
+            const baseOpacity = 0.5 + Math.random() * 0.4;
+            img.style.opacity = baseOpacity;
+
+            ocean.appendChild(img);
+
+            let duration = 16000 + Math.random() * 10000;
+            
+            const startPos = -250;
+            const endPos = window.innerHeight + 250;
+            const willDisappear = Math.random() < 0.3;
+
+            let keyframes = [];
+            if (willDisappear) {
+                keyframes = [
+                    { transform: `translateY(${startPos}px)`, opacity: baseOpacity },
+                    { transform: `translateY(${endPos * 0.4}px)`, opacity: baseOpacity },
+                    { transform: `translateY(${endPos * 0.6}px)`, opacity: 0 }, 
+                    { transform: `translateY(${endPos}px)`, opacity: 0 }
+                ];
+            } else {
+                keyframes = [
+                    { transform: `translateY(${startPos}px)` },
+                    { transform: `translateY(${endPos}px)` }
+                ];
+            }
+
+            const animation = img.animate(keyframes, {
+                duration: duration,
+                easing: 'linear'
+            });
+
+            if (isFastMode) {
+                animation.playbackRate = 3.0; 
+            }
+
+            activeAnimations.push(animation);
+
+            animation.onfinish = () => {
+                img.remove();
+                activeAnimations = activeAnimations.filter(a => a !== animation);
+            };
+        }
+
+        setInterval(() => createCreature(false), 2500);
+
+        for(let i = 0; i < 3; i++) {
+            createCreature(true);
+        }
+
+        // --- 🌟 ボート単体の長押しスピードコントロール処理 ---
+        const boat = document.getElementById('boat'); // ボートの要素を取得
+        const bgm = document.getElementById('bgm');
+
+        function startAccelerate(e) {
+            if (e) e.preventDefault(); // 長押し時のスマホのメニューポップアップ等を防ぐ
+            
+            if (bgm.paused) {
+                bgm.play().catch(err => console.log("再生失敗:", err));
+            }
+
+            if (!isFastMode) {
+                isFastMode = true;
+                
+                // すべての魚を3倍速にする
+                activeAnimations.forEach(animation => {
+                    animation.playbackRate = 3.0;
+                });
+                bgm.playbackRate = 1.2; // 音声を少し早回し
+            }
+        }
+
+        function stopAccelerate() {
+            if (isFastMode) {
+                isFastMode = false;
+
+                // すべての魚を元のスピードに戻す
+                activeAnimations.forEach(animation => {
+                    animation.playbackRate = 1.0;
+                });
+                bgm.playbackRate = 1.0; // 音声を通常に戻す
+            }
+        }
+
+        // イベントの対象をボタンから「boat（ボートのイラスト）」に変更
+        boat.addEventListener('mousedown', startAccelerate);
+        boat.addEventListener('mouseup', stopAccelerate);
+        boat.addEventListener('mouseleave', stopAccelerate); // カーソルがボートから外れたら減速
+
+        boat.addEventListener('touchstart', startAccelerate, { passive: false });
+        boat.addEventListener('touchend', stopAccelerate);
+    </script>
+</body>
+</html>
