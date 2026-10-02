@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海 一字の扉</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="sea.css">
+    <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"
+  integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+</head>
+<body>
+
+    <div class="opening-title" style="display: none;"></div>
+    <div class="opening-door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <div class="menu-trigger" id="menuTrigger">
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="smart-menu-overlay" id="menuOverlay">
+        <ul>
+            <li><a href="../index.html#top" class="menu-item">トップ</a></li>
+            <li><a href="../index.html#about" class="menu-item">サイトについて</a></li>
+            <li><a href="../index.html#origin" class="menu-item">言葉の起源</a></li>
+            <li><a href="../index.html#kanji" class="menu-item">漢字</a></li>
+        </ul>
+    </nav>
+
+     <script>
+        // --------------------------------------------------
+        // ③＆②：扉のアニメーション開始とメニューの制御
+        // --------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 300);
+        });
+
+        const trigger = document.getElementById('menuTrigger');
+        const overlay = document.getElementById('menuOverlay');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        function toggleMenu() {
+            trigger.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        trigger.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+    </script>
+
+
+
+    <div class="bak">
+
+    <!-- 背景画像用のレイヤー -->
+    <div class="background" id="bgImage"></div>
+
+    </div>
+
+
+
+    <!-- 効果音 -->
+        <div class="layer">
+          <button id="playButton" class="close-btn">
+            This website plays music.
+          </button>
+      </div>
+
+  <script>
+const sounds = [{src: "bird.mp3",volume: 0.2},{src: "bgm.mp3",volume: 0,},];
+
+const initVol = sounds[0].volume;
+
+// Howlインスタンスを作成
+const howls = sounds.map(
+  (sound) =>
+    new Howl({
+      src: sound.src,
+      loop: true,
+      volume: sound.volume,
+    })
+);
+
+// ボタンとレイヤーの要素を取得
+const playButton = document.getElementById("playButton");
+const layer = document.querySelector(".layer");
+
+// ボタンクリック時の処理
+playButton.addEventListener("click", () => {
+  // 1. 音声を再生開始
+  howls.forEach((howl) => howl.play());
+
+  // 2. レイヤーを消す
+  layer.style.display = "none";
+});
+
+
+// スクロールイベントリスナー
+window.addEventListener("scroll", () => {
+  const scrollY = window.scrollY;
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  const ratio = scrollY / height;
+
+  howls.forEach((howl, index) => {
+    howl.volume(initVol * (index === 0 ? 1 - ratio : ratio));
+  });
+});
+</script>
+</div>
+  
+
+  
+</body>
+</html>
