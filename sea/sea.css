@@ -1,0 +1,437 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #ffffff;
+    font-family: "Yu Mincho", "游明朝", YuMincho, serif;
+
+}
+
+.stage-container {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    background-image: url('sea00.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    transition: background-image 0.4s ease;
+    z-index: 0;
+}
+/* ==========================================================================
+   追加：トップページ共通UI・扉アニメーションの移植
+   ========================================================================== */
+
+.audio-control-btn {
+    right: 90px !important; 
+}
+
+.menu-trigger, .smart-menu-overlay {
+    font-family: "Noto Serif JP", serif;
+}
+
+.opening-door-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 999;
+    pointer-events: none;
+    display: flex;
+}
+
+.door {
+    width: 50%;
+    height: 100vh;
+    background-color: #333333; 
+    position: absolute;
+    top: 0;
+    transition: transform 1.6s cubic-bezier(0.66, 0, 0.2, 1);
+}
+
+.door-left {
+    left: 0;
+    transform: translateX(0);
+    border-right: 1px solid #444444;
+}
+
+.door-right {
+    right: 0;
+    transform: translateX(0);
+    border-left: 1px solid #444444;
+}
+
+body.loaded .door-left {
+    transform: translateX(-100%);
+}
+body.loaded .door-right {
+    transform: translateX(100%);
+}
+
+.menu-trigger {
+    position: fixed;
+    top: 25px; 
+    right: 40px;
+    z-index: 1000; 
+    cursor: pointer;
+    width: 28px;
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu-trigger span {
+    display: block;
+    width: 100%;
+    height: 1.5px;
+    background-color: #3a3a3a;
+    transition: transform 0.4s ease, background-color 0.4s ease;
+}
+
+.menu-trigger.active span {
+    background-color: #3a3a3a;
+}
+
+.menu-trigger.active span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+}
+.menu-trigger.active span:nth-child(2) {
+    transform: translateY(-6.5px) rotate(-45deg);
+}
+
+.smart-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(252, 250, 242, 0.98); 
+    z-index: 950;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.smart-menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.smart-menu-overlay ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    gap: 50px;
+}
+
+.smart-menu-overlay li a {
+    color: #3a3a3a; 
+    text-decoration: none;
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    font-weight: 500;
+    transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.smart-menu-overlay li a:hover {
+    opacity: 0.5;
+}
+
+/*言葉配置*/
+.words-container{
+display: flex;
+align-items: center;
+justify-content: center;
+position: fixed;
+width: 100vw;
+height: 100vh;
+overflow: visible;
+font-size: 32px;
+z-index: 10; /* 雲（5）よりも高い値にする */
+
+}
+.words {
+    position: absolute;
+    color: rgb(231, 231, 231);
+    font-size: 24px;
+    font-family: "Noto Serif JP", serif;
+    white-space: nowrap;
+    pointer-events: auto; /* クリックを邪魔しないようにする */
+    z-index: 10; /* 背景より手前に表示する */
+    writing-mode: vertical-rl;/* 文字縦書き */
+        text-shadow: 2px 2px 10px #5b89ba ,
+-2px 2px 10px #5b89ba ,
+2px -2px 10px #5b89ba ,
+-2px -2px 10px #5b89ba;
+    
+}
+
+/* ポップアップ（モーダル）のスタイル */
+dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 24px;
+  width: 300px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background: #fff;
+}
+dialog h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+dialog p {
+  color: #666;
+  line-height: 1.6;
+}
+
+#close-btn {
+  margin-top: 16px;
+  padding: 6px 16px;
+  background: #6b8e23;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+/* ホバー時に切り替わる背景画像（各パターン） */
+.stage-container.bg1 {
+    background-image: url('sea01.png') !important;
+}
+.stage-container.bg2 {
+    background-image: url('sea02.png') !important;
+}
+.stage-container.bg3 {
+    background-image: url('sea03.png') !important;
+}
+.stage-container.bg4 {
+    background-image: url('sea04.png') !important;
+}
+
+.words:hover {
+  transform: scale(1.05); /* ホバーした時に少し大きくする演出 */
+}
+
+
+/*BGMのための*/
+
+.layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8); /* 半透明の背景 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* レイヤーを最前面に */
+}
+
+.close-btn {
+  display: inline-block;
+  height: 4rem;
+  background-color: #d5d5d56d;
+  padding: 15px 32px;
+  border: none;
+  border-radius: 2rem;
+  font-size: 1rem;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+
+
+/*波*/
+
+.ocean-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    background: transparent;
+    z-index: 1;
+    
+}
+
+.ocean-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 40%;
+  background-repeat: repeat-x;
+}
+
+.wave-front {
+  background-image: url("wave1.png");
+  background-size: 1000px 100%;
+  animation: waveScroll 20s linear infinite;
+  bottom: 0;
+}
+
+.wave-middle {
+  background-image: url("wave2.png");
+  background-size: 1000px 100%;
+  animation: waveScroll 30s linear infinite reverse;
+  bottom: 0px;
+}
+
+.wave-back {
+  background-image: url("wave3.png");
+  background-size: 1000px 100%;
+  animation: waveScroll 60s linear infinite;
+  bottom: 0px;
+}
+
+@keyframes waveScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* 幅を200%にしているので-50%で1ループ */
+  }
+}
+
+
+
+/* 鳥が流れるアニメーション定義 */
+   .bird {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: rotate(45deg);
+  animation: moving 20s linear infinite;
+}
+
+.bird.-type_2 {
+  animation-delay: 1s;
+}
+.bird.-type_2:before,
+.bird.-type_2:after {
+  animation-delay: -2s;
+}
+
+.bird.-type_3 {
+  animation-delay: 3s;
+}
+
+@keyframes moving {
+  0% {
+    top: 47vh;
+    left: -2vw;
+  }
+  25% {
+    top: 51vh;
+    left: 23vw
+  }
+  100% {
+    top: 47vh;
+    left: 101vw;
+  }
+}
+
+.bird:before, .bird:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: black;
+  transform: rotate(-30deg);
+  transform-origin: right bottom;
+}
+
+.bird:before {
+  width: 100%;
+  height: 1px;
+  animation: leftWing 8s linear infinite;
+}
+.bird:after {
+  width: 1px;
+  height: 100%;
+  animation: rightWing 8s linear infinite;
+}
+
+@keyframes leftWing {
+  0%   { transform: rotate(-30deg); }
+  2%   { transform: rotate(-110deg); }
+  4%   { transform: rotate(-30deg); }
+  6%   { transform: rotate(-110deg); }
+  8%   { transform: rotate(-30deg); }
+  10%  { transform: rotate(-110deg); }
+  12%  { transform: rotate(-30deg); }
+  30%  { transform: rotate(-30deg); }
+  42%  { transform: rotate(-35deg); }
+  72%  { transform: rotate(-35deg); }
+  74%  { transform: rotate(10deg); }
+  76%  { transform: rotate(-30deg); }
+  78%  { transform: rotate(-110deg); }
+  80%  { transform: rotate(-30deg); }
+  82%  { transform: rotate(-110deg); }
+  84%  { transform: rotate(-30deg); }
+  86%  { transform: rotate(-110deg); }
+  88%  { transform: rotate(-30deg); }
+  90%  { transform: rotate(-110deg); }
+  92%  { transform: rotate(-30deg); }
+  94%  { transform: rotate(-110deg); }
+  96%  { transform: rotate(-30deg); }
+  98%  { transform: rotate(-110deg); }
+  100% { transform: rotate(-30deg); }
+}
+
+@keyframes rightWing {
+  0%   { transform: rotate(30deg); }
+  2%   { transform: rotate(110deg); }
+  4%   { transform: rotate(30deg); }
+  6%   { transform: rotate(110deg); }
+  8%   { transform: rotate(30deg); }
+  10%  { transform: rotate(110deg); }
+  12%  { transform: rotate(30deg); }
+  30%  { transform: rotate(30deg); }
+  42%  { transform: rotate(35deg); }
+  72%  { transform: rotate(35deg); }
+  74%  { transform: rotate(0deg); }
+  76%  { transform: rotate(30deg); }
+  78%  { transform: rotate(110deg); }
+  80%  { transform: rotate(30deg); }
+  82%  { transform: rotate(110deg); }
+  84%  { transform: rotate(30deg); }
+  86%  { transform: rotate(110deg); }
+  88%  { transform: rotate(30deg); }
+  90%  { transform: rotate(110deg); }
+  92%  { transform: rotate(30deg); }
+  94%  { transform: rotate(110deg); }
+  96%  { transform: rotate(30deg); }
+  98%  { transform: rotate(110deg); }
+  100% { transform: rotate(30deg); }
+}
+
+/****** Base style. ******/
+body {
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+}

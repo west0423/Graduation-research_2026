@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海 一字の扉</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="sea.css">
+
+            <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"
+  integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+</head>
+
+
+
+<body>
+
+    <div class="opening-title" style="display: none;"></div>
+    <div class="opening-door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <div class="menu-trigger" id="menuTrigger">
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="smart-menu-overlay" id="menuOverlay">
+        <ul>
+            <li><a href="../index.html#top" class="menu-item">トップ</a></li>
+            <li><a href="../index.html#about" class="menu-item">サイトについて</a></li>
+            <li><a href="../index.html#origin" class="menu-item">各言葉の意味</a></li>
+            <li><a href="../index.html#kanji" class="menu-item">漢字</a></li>
+        </ul>
+    </nav>
+
+        <div class="stage-container" id="stage">
+
+        <div class="ocean-bg">
+            <div class="ocean-wave wave-front"></div>
+            <div class="ocean-wave wave-middle"></div>
+            <div class="ocean-wave wave-back"></div>
+        </div>
+
+        </div>
+
+     <script>
+        // --------------------------------------------------
+        // ③＆②：扉のアニメーション開始とメニューの制御
+        // --------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 300);
+        });
+
+        const trigger = document.getElementById('menuTrigger');
+        const overlay = document.getElementById('menuOverlay');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        function toggleMenu() {
+            trigger.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        trigger.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+    </script>
+
+
+<!-- 意味を表示するポップアップ用モーダル -->
+<dialog id="meaning-dialog">
+  <h3 id="dialog-word">言葉</h3>
+  <p id="dialog-text">ここに意味が表示されます。</p>
+  <button id="close-btn">閉じる</button>
+</dialog>
+
+
+    <!-- 言葉 -->
+<div class="words-container" id="wordsContainer">
+    <span class="words" data-target="bg1" data-word="四海兄弟" style="left: 44%; top: 80%;">四海兄弟</span>
+    <span class="words" data-target="bg3" data-word="海千山千" style="left: 25%; top: 20%;">海千山千</span>
+    <span class="words" data-target="bg1" data-word="一天四海" style="left: 90%; top: 10%;">一天四海</span>
+    <span class="words" data-target="bg3" data-word="人海戦術" style="left: 40%; top: 15%;">人海戦術</span>
+    <span class="words" data-target="bg1" data-word="待てば海路の日和あり" style="left: 55%; top: 45%;">待てば海路の日和あり</span>
+    <span class="words" data-target="bg2" data-word="海老で鯛を釣る" style="left: 80%; top: 60%;">海老で鯛を釣る</span>
+    <span class="words" data-target="bg3" data-word="ざんぶ" style="left: 30%; top: 60%;">ざんぶ</span>
+    <span class="words" data-target="bg1" data-word="父母の恩は山よりも高く海よりも深し" style="left: 10%; top: 10%;">父母の恩は山よりも高く海よりも深し</span>
+    <span class="words" data-target="bg1" data-word="ぷかりぷかり" style="left: 70%; top: 20%;">ぷかりぷかり</span>
+    <span class="words" data-target="bg1" data-word="ぽちゃん" style="left: 20%; top: 80%;">ぽちゃん</span>
+</div>
+
+
+
+     <script>
+// --------------------------------------------------
+// 言葉の意味を管理するデータ（辞書）
+// --------------------------------------------------
+const wordMeanings = {
+    "四海兄弟": "シカイキョウダイ：世界じゅうの人々はすべて兄弟のように親しくし、愛し合うべきであるということ。",
+    "海千山千": "ウミセンヤマセン：世間の経験を多く積み、物事の裏表を知り抜いていて悪賢いこと。また、そのような人。",
+    "一天四海": "イッテンシカイ：天の下と四方の海。天下全体。全世界。",
+    "人海戦術": "多くの兵員で、損害をかえりみず数の力で敵軍を押しきろうとする戦術。転じて、多人数で物事に対処すること。",
+    "待てば海路の日和あり": "マテバカイロノヒヨリアリ：待っていれば、海の静かないい日和がやってくる。あせらずにじっくりと待っていれば、やがてよい機会がめぐってくる。",
+    "海老で鯛を釣る": "エビデタイヲツル：少しの元手または労力で大きな利益を得ることのたとえ。",
+    "ざんぶ": "大きなものが勢いよく水中に飛び込む音や、大きな波が打ち寄せる音を表す語。",
+    "父母の恩は山よりも高く海よりも深し": "フボノオンハヤマヨリモタカクウミヨリモフカシ：両親から受けた恩は何物にも比べることができないほど大きいものだというたとえ。",
+    "ぷかりぷかり": "軽い物が空や水面などに浮かんでいるさま。",
+    "ぽちゃん": "比較的小さくて軽いものが水に落ちる音や、そのさまを表す語。",
+};
+
+// 要素の取得
+const dialog = document.getElementById('meaning-dialog');
+const dialogWord = document.getElementById('dialog-word');
+const dialogText = document.getElementById('dialog-text');
+const closeBtn = document.getElementById('close-btn');
+const wordElements = document.querySelectorAll('.words');
+
+// 各言葉にクリックイベントを設定
+wordElements.forEach(element => {
+    element.addEventListener('click', () => {
+        const wordName = element.getAttribute('data-word'); // 属性から言葉を取得
+        const meaning = wordMeanings[wordName] || "意味が登録されていません。";
+
+        // モーダルに文字と意味を流し込む
+        dialogWord.textContent = wordName;
+        dialogText.textContent = meaning;
+
+        // モーダルを表示（<dialog>タグの標準機能）
+        dialog.showModal();
+    });
+});
+
+// 「閉じる」ボタンが押されたらモーダルを閉じる
+closeBtn.addEventListener('click', () => {
+    dialog.close();
+});
+
+// モーダルの外側（背景）をクリックしたときにも閉じたい場合
+dialog.addEventListener('click', (event) => {
+    const rect = dialog.getBoundingClientRect();
+    if (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+    ) {
+        dialog.close();
+    }
+});
+    </script>
+
+ <!-- 効果音 -->
+    <div class="layer">
+        <button id="playButton" class="close-btn">このページでは音が流れます</button>
+    </div>
+    
+ <!-- 効果音 -->
+<script>
+    const stage = document.getElementById('stage');
+    let currentBg = null;
+
+    // 1. 【音声の準備】デフォルトの音と、bg1〜bg4に対応する音をそれぞれ定義する
+    // ※ファイル名は実際の音声ファイル名に書き換えてください
+    const sounds = {
+        default: new Howl({ src: ["sea00.mp3"], loop: true, volume: 0.2 }),// デフォ
+        bg1: new Howl({ src: ["sea01.mp3"], loop: true, volume: 0.2 }),   // 春の音
+        bg2: new Howl({ src: ["sea02.mp3"], loop: true, volume: 0.2 }),   // 夏の音
+        bg3: new Howl({ src: ["sea03.mp3"], loop: true, volume: 0.2 }),   // 荒れた海
+        bg4: new Howl({ src: ["sea04.mp3"], loop: true, volume: 0.1 })    // 冬の音
+    };
+
+    // 現在再生中の音を管理する変数
+    let activeSound = sounds.default;
+
+    // 音声を切り替える関数
+    function switchSound(targetKey) {
+        // すべての音をいったん停止する
+        Object.values(sounds).forEach(sound => sound.stop());
+
+        // 指定されたテーマの音を選ぶ（なければデフォルト）
+        const nextSound = sounds[targetKey] || sounds.default;
+        
+        // 音を再生して、アクティブ音を更新
+        nextSound.play();
+        activeSound = nextSound;
+    }
+
+    // 2. 背景と音声を同時に適用する関数
+    function applyBackground(target) {
+        if (!target) return;
+        
+        // 背景クラスの切り替え
+        stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+        stage.classList.add(target);
+        currentBg = target;
+
+        // 【連動】音声の切り替え
+        switchSound(target);
+    }
+
+    // 3. 背景と音声を元に戻す関数（モーダルが開いていない場合のみ）
+    function removeBackground(target) {
+        if (!dialog.hasAttribute('open')) {
+            stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+            currentBg = null;
+
+            // 【連動】音声をデフォルトに戻す
+            switchSound('default');
+        }
+    }
+
+    // 各言葉にイベントを設定
+    wordElements.forEach(item => {
+        let target = item.dataset.target;
+
+        // マウスが乗ったとき
+        item.addEventListener('mouseenter', () => {
+            applyBackground(target);  
+        });
+
+        // マウスが離れたとき
+        item.addEventListener('mouseleave', () => {
+            removeBackground(target); 
+        });
+
+        // 言葉をクリックした時
+        item.addEventListener('click', () => {
+            applyBackground(target);
+        });
+    });
+
+    // モーダルを閉じた時、背景と音声をリセットする
+    function closeModalAndReset() {
+        dialog.close();
+        stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+        currentBg = null;
+        switchSound('default'); // デフォルトの音に戻す
+    }
+
+    closeBtn.addEventListener('click', closeModalAndReset);
+
+    // モーダルの外側をクリックして閉じたとき
+    dialog.addEventListener('click', (event) => {
+        const rect = dialog.getBoundingClientRect();
+        if (
+            event.clientX < rect.left ||
+            event.clientX > rect.right ||
+            event.clientY < rect.top ||
+            event.clientY > rect.bottom
+        ) {
+            closeModalAndReset();
+        }
+    });
+
+    // 4. 【スタートボタン（レイヤー）の処理】
+    // 最初は音を鳴らさず、ボタンを押したタイミングでデフォルト音を再生可能にする
+    const playButton = document.getElementById("playButton");
+    const layer = document.querySelector(".layer");
+
+    playButton.addEventListener("click", () => {
+        // デフォルト音の再生開始
+        sounds.default.play();
+        layer.style.display = "none";
+    });
+</script>
+
+
+
+<!-- 鳥 -->
+<div class="bird"></div>
+<div class="bird -type_2"></div>
+<div class="bird -type_3"></div>
+
+
+</body>
+</html>
