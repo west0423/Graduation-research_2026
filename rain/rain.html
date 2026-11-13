@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山 一字の扉</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="rain.css">
+
+            <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"
+  integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+</head>
+
+
+
+<body>
+
+    <div class="opening-title" style="display: none;"></div>
+    <div class="opening-door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <div class="menu-trigger" id="menuTrigger">
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="smart-menu-overlay" id="menuOverlay">
+        <ul>
+            <li><a href="../index.html#top" class="menu-item">トップ</a></li>
+            <li><a href="../index.html#about" class="menu-item">サイトについて</a></li>
+            <li><a href="../index.html#origin" class="menu-item">各言葉の意味</a></li>
+            <li><a href="../index.html#kanji" class="menu-item">漢字</a></li>
+        </ul>
+    </nav>
+
+        <div class="stage-container" id="stage"></div>
+
+     <script>
+        // --------------------------------------------------
+        // ③＆②：扉のアニメーション開始とメニューの制御
+        // --------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 300);
+        });
+
+        const trigger = document.getElementById('menuTrigger');
+        const overlay = document.getElementById('menuOverlay');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        function toggleMenu() {
+            trigger.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        trigger.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+    </script>
+
+
+<!-- 意味を表示するポップアップ用モーダル -->
+<dialog id="meaning-dialog">
+  <h3 id="dialog-word">言葉</h3>
+  <p id="dialog-text">ここに意味が表示されます。</p>
+  <button id="close-btn">閉じる</button>
+</dialog>
+
+
+    <!-- 言葉 -->
+<div class="words-container" id="wordsContainer">
+    <span class="words" data-target="bg1" data-word="雨垂れ石を穿つ" style="left: 10%; top: 10%;">雨垂れ石を穿つ</span>
+    <span class="words" data-target="bg3" data-word="雨過天晴" style="left: 70%; top: 20%;">雨過天晴</span>
+    <span class="words" data-target="bg1" data-word="朝雨は女の腕捲り" style="left: 90%; top: 10%;">朝雨は女の腕捲り</span>
+    <span class="words" data-target="bg3" data-word="ぱらぱら" style="left: 40%; top: 15%;">ぱらぱら</span>
+    <span class="words" data-target="bg4" data-word="雨あめに濡ぬれて露つゆ恐おそろしからず" style="left: 20%; top: 30%;">雨あめに濡ぬれて露つゆ恐おそろしからず</span>
+    <span class="words" data-target="bg2" data-word="春雨" style="left: 80%; top: 60%;">春雨</span>
+    <span class="words" data-target="bg4" data-word="雨は花の父母" style="left: 30%; top: 60%;">雨は花の父母</span>
+    <span class="words" data-target="bg1" data-word="干天の慈雨" style="left: 44%; top: 80%;">干天の慈雨</span>
+    <span class="words" data-target="bg1" data-word="ざんざん" style="left: 70%; top: 75%;">ざんざん</span>
+    <span class="words" data-target="bg2" data-word="七つ下りの雨" style="left: 55%; top: 45%;">七つ下りの雨</span>
+    <span class="words" data-target="bg4" data-word="遣らずの雨" style="left: 10%; top: 70%;">遣らずの雨</span>
+</div>
+
+
+
+     <script>
+// --------------------------------------------------
+// 言葉の意味を管理するデータ（辞書）
+// --------------------------------------------------
+const wordMeanings = {
+    "雨垂れ石を穿つ": "アマダレイシヲウガツ：小さな努力でも根気よく続けてやれば、最後には成功する。",
+    "雨過天晴": "ウカテンセイ：悪かった状況や状態が、よいほうに向かうことのたとえ。",
+    "朝雨は女の腕捲り": "アサアメハオンナノウデマクリ：朝の雨はすぐにあがるから、女の腕まくりと同じようにこわくない。",
+    "ぱらぱら": "粒状のものがまばらに降ったり散ったりする音や、そのさまを表す語",
+    "ざんざん": "雨が激しい勢いで降るさま。",
+    "春雨": "ハルサメ：春、しとしとと静かに降る雨。",
+    "雨は花の父母": "あめははなのふぼ：花は雨の恵みによって咲くことをいう。",
+    "雨あめに濡ぬれて露つゆ恐おそろしからず": "アメニヌレテツユオソロシカラズ：大難に出あった者は小難を恐れないことをいうたとえ。",
+    "干天の慈雨": "カンテンノジウ：日照り続きのときに降る、恵みの雨。待ち望んでいた物事の実現、困っているときにさしのべられる救いの手にたとえる。",
+    "七つ下りの雨": "ナナツサガリノアメ：午後4時過ぎに降り出した雨。大概は長く降り続くので、なかなか終わらないもののたとえにいう。",
+    "遣らずの雨": "ヤラズノアメ：帰ろうとする人をひきとめるかのように降ってくる雨。",
+};
+
+// 要素の取得
+const dialog = document.getElementById('meaning-dialog');
+const dialogWord = document.getElementById('dialog-word');
+const dialogText = document.getElementById('dialog-text');
+const closeBtn = document.getElementById('close-btn');
+const wordElements = document.querySelectorAll('.words');
+
+// 各言葉にクリックイベントを設定
+wordElements.forEach(element => {
+    element.addEventListener('click', () => {
+        const wordName = element.getAttribute('data-word'); // 属性から言葉を取得
+        const meaning = wordMeanings[wordName] || "意味が登録されていません。";
+
+        // モーダルに文字と意味を流し込む
+        dialogWord.textContent = wordName;
+        dialogText.textContent = meaning;
+
+        // モーダルを表示（<dialog>タグの標準機能）
+        dialog.showModal();
+    });
+});
+
+// 「閉じる」ボタンが押されたらモーダルを閉じる
+closeBtn.addEventListener('click', () => {
+    dialog.close();
+});
+
+// モーダルの外側（背景）をクリックしたときにも閉じたい場合
+dialog.addEventListener('click', (event) => {
+    const rect = dialog.getBoundingClientRect();
+    if (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+    ) {
+        dialog.close();
+    }
+});
+    </script>
+
+ <!-- 効果音 -->
+    <div class="layer">
+        <button id="playButton" class="close-btn">このページでは音が流れます</button>
+    </div>
+ <!-- 効果音 -->
+<script>
+    const stage = document.getElementById('stage');
+    let currentBg = null;
+
+    // 1. 【音声の準備】デフォルトの音と、bg1〜bg4に対応する音をそれぞれ定義する
+    // ※ファイル名は実際の音声ファイル名に書き換えてください
+    const sounds = {
+        default: new Howl({ src: ["rain00.mp3"], loop: true, volume: 0.2 }),
+        bg1: new Howl({ src: ["rain01.mp3"], loop: true, volume: 0.2 }),   // 晴れ間
+        bg2: new Howl({ src: ["rain02.mp3"], loop: true, volume: 0.2 }),   // 強い雨
+        bg3: new Howl({ src: ["rain03.mp3"], loop: true, volume: 0.2 }),   // 大雨
+        bg4: new Howl({ src: ["rain04.mp3"], loop: true, volume: 0.1 })    // 冬の音
+    };
+
+    // 現在再生中の音を管理する変数
+    let activeSound = sounds.default;
+
+    // 音声を切り替える関数
+    function switchSound(targetKey) {
+        // すべての音をいったん停止する
+        Object.values(sounds).forEach(sound => sound.stop());
+
+        // 指定されたテーマの音を選ぶ（なければデフォルト）
+        const nextSound = sounds[targetKey] || sounds.default;
+        
+        // 音を再生して、アクティブ音を更新
+        nextSound.play();
+        activeSound = nextSound;
+    }
+
+    // 2. 背景と音声を同時に適用する関数
+    function applyBackground(target) {
+        if (!target) return;
+        
+        // 背景クラスの切り替え
+        stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+        stage.classList.add(target);
+        currentBg = target;
+
+        // 【連動】音声の切り替え
+        switchSound(target);
+    }
+
+    // 3. 背景と音声を元に戻す関数（モーダルが開いていない場合のみ）
+    function removeBackground(target) {
+        if (!dialog.hasAttribute('open')) {
+            stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+            currentBg = null;
+
+            // 【連動】音声をデフォルトに戻す
+            switchSound('default');
+        }
+    }
+
+    // 各言葉にイベントを設定
+    wordElements.forEach(item => {
+        let target = item.dataset.target;
+
+        // マウスが乗ったとき
+        item.addEventListener('mouseenter', () => {
+            applyBackground(target);  
+        });
+
+        // マウスが離れたとき
+        item.addEventListener('mouseleave', () => {
+            removeBackground(target); 
+        });
+
+        // 言葉をクリックした時
+        item.addEventListener('click', () => {
+            applyBackground(target);
+        });
+    });
+
+    // モーダルを閉じた時、背景と音声をリセットする
+    function closeModalAndReset() {
+        dialog.close();
+        stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+        currentBg = null;
+        switchSound('default'); // デフォルトの音に戻す
+    }
+
+    closeBtn.addEventListener('click', closeModalAndReset);
+
+    // モーダルの外側をクリックして閉じたとき
+    dialog.addEventListener('click', (event) => {
+        const rect = dialog.getBoundingClientRect();
+        if (
+            event.clientX < rect.left ||
+            event.clientX > rect.right ||
+            event.clientY < rect.top ||
+            event.clientY > rect.bottom
+        ) {
+            closeModalAndReset();
+        }
+    });
+
+    // 4. 【スタートボタン（レイヤー）の処理】
+    // 最初は音を鳴らさず、ボタンを押したタイミングでデフォルト音を再生可能にする
+    const playButton = document.getElementById("playButton");
+    const layer = document.querySelector(".layer");
+
+    playButton.addEventListener("click", () => {
+        // デフォルト音の再生開始
+        sounds.default.play();
+        layer.style.display = "none";
+    });
+</script>
+
+
+
+<div class="rainning">
+  <div class="rain"></div>
+  <div class="rain"></div>
+  <div class="rain"></div>
+  <div class="rain"></div>
+  <div class="rain"></div>
+  <div class="rain"></div>
+  <div class="rain"></div>
+  <div class="rain"></div>
+  <div class="rain"></div>
+</div>
+
+</body>
+</html>
