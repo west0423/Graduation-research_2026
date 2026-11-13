@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星 一字の扉</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="star.css">
+
+        <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"
+  integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+</head>
+
+
+
+<body>
+
+    <div class="opening-title" style="display: none;"></div>
+    <div class="opening-door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <div class="menu-trigger" id="menuTrigger">
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="smart-menu-overlay" id="menuOverlay">
+        <ul>
+            <li><a href="../index.html#top" class="menu-item">トップ</a></li>
+            <li><a href="../index.html#about" class="menu-item">サイトについて</a></li>
+            <li><a href="../index.html#origin" class="menu-item">各言葉の意味</a></li>
+            <li><a href="../index.html#kanji" class="menu-item">漢字</a></li>
+        </ul>
+    </nav>
+
+     <script>
+        // --------------------------------------------------
+        // ③＆②：扉のアニメーション開始とメニューの制御
+        // --------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 300);
+        });
+
+        const trigger = document.getElementById('menuTrigger');
+        const overlay = document.getElementById('menuOverlay');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        function toggleMenu() {
+            trigger.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        trigger.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+    </script>
+
+
+
+
+
+<!-- 意味を表示するポップアップ用モーダル -->
+<dialog id="meaning-dialog">
+  <h3 id="dialog-word">言葉</h3>
+  <p id="dialog-text">ここに意味が表示されます。</p>
+  <button id="close-btn">閉じる</button>
+</dialog>
+
+
+<!-- 星空背景 -->
+<div class="stars">
+
+    <!-- 言葉 -->
+<div class="words-container" id="wordsContainer">
+    <span class="words" data-target="bg1" data-word="星を数うる如し" style="left: 10%; top: 10%;">星を数うる如し</span>
+    <span class="words" data-target="bg3" data-word="巨星墜つ" style="left: 70%; top: 20%;">巨星墜つ</span>
+    <span class="words" data-target="bg1" data-word="彗星の如く" style="left: 90%; top: 10%;">彗星の如く</span>
+    <span class="words" data-target="bg3" data-word="名の無い星は宵から出る" style="left: 40%; top: 15%;">名の無い星は宵から出る</span>
+    <span class="words" data-target="bg4" data-word="竿竹で星を打つ" style="left: 55%; top: 45%;">竿竹で星を打つ</span>
+    <span class="words" data-target="bg2" data-word="星を戴く" style="left: 80%; top: 60%;">星を戴く</span>
+    <span class="words" data-target="bg4" data-word="暁天の星" style="left: 30%; top: 60%;">暁天の星</span>
+    <span class="words" data-target="bg1" data-word="ぴかぴか" style="left: 44%; top: 80%;">ぴかぴか</span>
+    <span class="words" data-target="bg1" data-word="きらり" style="left: 70%; top: 75%;">きらり</span>
+    <span class="words" data-target="bg2" data-word="星月夜" style="left: 20%; top: 30%;">星月夜</span>
+</div>
+
+
+<canvas id="c"></canvas>
+
+
+
+ <!-- 効果音 -->
+    <div class="layer">
+        <button id="playButton" class="close-btn">このページでは音が流れます</button>
+    </div>
+
+
+     <script>
+// --------------------------------------------------
+// 言葉の意味を管理するデータ（辞書）
+// --------------------------------------------------
+const wordMeanings = {
+    "星を数うる如し": "ホシヲカゾウルゴトシ：限りのないこと、また成功の見込みのないことのたとえ。",
+    "巨星墜つ": "キョセイオツ：大きな業績を残した偉大な人物が死んだことを、哀惜の念を込めていう表現。",
+    "彗星の如く": "スイセイノゴトク：突然はなやかに現れるさまを、夜空に彗星が現れる様子にたとえた言葉。",
+    "名の無い星は宵から出る": "つまらないものが先に出るたとえ。最初に出てくるものにはよい物はない。",
+    "竿竹で星を打つ": "サオダケデホシヲウツ：不可能な事をする愚かさ、また、思う所に届かないもどかしさをたとえていう。",
+    "星を戴く": "ホシヲイタダク：朝早く、まだ星のあるうちから働く。また、朝早くから夜遅くまで勤め励む。",
+    "暁天の星": "ギョウテンノホシ：明け方まばらにしか見えなくなっている星々。転じて、数が少ないことのたとえ。",
+    "星月夜": "ホシヅキヨ：晴れて星の光が月のように明るい夜。",
+    "ぴかぴか": "断続的に強い光を放つさま。また、光り輝くさま。",
+    "きらり": "一瞬、鋭く光を放つさま。",
+};
+
+// 要素の取得
+const dialog = document.getElementById('meaning-dialog');
+const dialogWord = document.getElementById('dialog-word');
+const dialogText = document.getElementById('dialog-text');
+const closeBtn = document.getElementById('close-btn');
+const wordElements = document.querySelectorAll('.words');
+
+// 各言葉にクリックイベントを設定
+wordElements.forEach(element => {
+    element.addEventListener('click', () => {
+        const wordName = element.getAttribute('data-word'); // 属性から言葉を取得
+        const meaning = wordMeanings[wordName] || "意味が登録されていません。";
+
+        // モーダルに文字と意味を流し込む
+        dialogWord.textContent = wordName;
+        dialogText.textContent = meaning;
+
+        // モーダルを表示（<dialog>タグの標準機能）
+        dialog.showModal();
+    });
+});
+
+// 「閉じる」ボタンが押されたらモーダルを閉じる
+closeBtn.addEventListener('click', () => {
+    dialog.close();
+});
+
+// モーダルの外側（背景）をクリックしたときにも閉じたい場合
+dialog.addEventListener('click', (event) => {
+    const rect = dialog.getBoundingClientRect();
+    if (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+    ) {
+        dialog.close();
+    }
+});
+    </script>
+
+
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  // 星を表示するための親要素を取得
+  const stars = document.querySelector(".stars");
+
+  // 星を生成する関数
+  const createStar = () => {
+    const starEl = document.createElement("span");
+    starEl.className = "star";
+    const minSize = 1; // 星の最小サイズを指定
+    const maxSize = 2; // 星の最大サイズを指定
+    const size = Math.random() * (maxSize - minSize) + minSize;
+    starEl.style.width = `${size}px`;
+    starEl.style.height = `${size}px`;
+    starEl.style.left = `${Math.random() * 100}%`;
+    starEl.style.top = `${Math.random() * 100}%`;
+    starEl.style.animationDelay = `${Math.random() * 10}s`;
+    stars.appendChild(starEl);
+  };
+
+  // for文で星を生成する関数を指定した回数呼び出す
+  for (let i = 0; i <= 500; i++) {
+    createStar();
+  }
+});
+ </script>
+ 
+ 
+ <!-- 効果音 -->
+<script>
+    const stage = document.getElementById('stage');
+    let currentBg = null;
+
+    // 1. 【音声の準備】デフォルトの音と、bg1〜bg4に対応する音をそれぞれ定義する
+    // ※ファイル名は実際の音声ファイル名に書き換えてください
+    const sounds = {
+        default: new Howl({ src: ["bgm.mp3"], loop: true, volume: 0.2 }),
+        bg1: new Howl({ src: ["star01.mp3"], loop: true, volume: 0.2 }),   
+        bg2: new Howl({ src: ["star02.mp3"], loop: true, volume: 0.2 }),  
+        bg3: new Howl({ src: ["star03.mp3"], loop: true, volume: 0.2 }),   
+        bg4: new Howl({ src: ["star04.mp3"], loop: true, volume: 0.1 }) 
+    };
+
+    // 現在再生中の音を管理する変数
+    let activeSound = sounds.default;
+
+    // 音声を切り替える関数
+    function switchSound(targetKey) {
+        // すべての音をいったん停止する
+        Object.values(sounds).forEach(sound => sound.stop());
+
+        // 指定されたテーマの音を選ぶ（なければデフォルト）
+        const nextSound = sounds[targetKey] || sounds.default;
+        
+        // 音を再生して、アクティブ音を更新
+        nextSound.play();
+        activeSound = nextSound;
+    }
+
+    // 2. 背景と音声を同時に適用する関数
+    function applyBackground(target) {
+        if (!target) return;
+        
+        // 背景クラスの切り替え
+        stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+        stage.classList.add(target);
+        currentBg = target;
+
+        // 【連動】音声の切り替え
+        switchSound(target);
+    }
+
+    // 3. 背景と音声を元に戻す関数（モーダルが開いていない場合のみ）
+    function removeBackground(target) {
+        if (!dialog.hasAttribute('open')) {
+            stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+            currentBg = null;
+
+            // 【連動】音声をデフォルトに戻す
+            switchSound('default');
+        }
+    }
+
+    // 各言葉にイベントを設定
+    wordElements.forEach(item => {
+        let target = item.dataset.target;
+
+        // マウスが乗ったとき
+        item.addEventListener('mouseenter', () => {
+            applyBackground(target);  
+        });
+
+        // マウスが離れたとき
+        item.addEventListener('mouseleave', () => {
+            removeBackground(target); 
+        });
+
+        // 言葉をクリックした時
+        item.addEventListener('click', () => {
+            applyBackground(target);
+        });
+    });
+
+    // モーダルを閉じた時、背景と音声をリセットする
+    function closeModalAndReset() {
+        dialog.close();
+        stage.classList.remove('bg1', 'bg2', 'bg3', 'bg4');
+        currentBg = null;
+        switchSound('default'); // デフォルトの音に戻す
+    }
+
+    closeBtn.addEventListener('click', closeModalAndReset);
+
+    // モーダルの外側をクリックして閉じたとき
+    dialog.addEventListener('click', (event) => {
+        const rect = dialog.getBoundingClientRect();
+        if (
+            event.clientX < rect.left ||
+            event.clientX > rect.right ||
+            event.clientY < rect.top ||
+            event.clientY > rect.bottom
+        ) {
+            closeModalAndReset();
+        }
+    });
+
+    // 4. 【スタートボタン（レイヤー）の処理】
+    // 最初は音を鳴らさず、ボタンを押したタイミングでデフォルト音を再生可能にする
+    const playButton = document.getElementById("playButton");
+    const layer = document.querySelector(".layer");
+
+    playButton.addEventListener("click", () => {
+        // デフォルト音の再生開始
+        sounds.default.play();
+        layer.style.display = "none";
+    });
+</script>
+
+
+ <!-- 望遠鏡 -->
+<script>
+
+// 望遠鏡
+let App = ((window) => {
+    let width, height, ctnX, ctnY, teleScopeR;
+    let starMax = 100;
+    let cv = document.getElementById('c');
+    let ctx = cv.getContext('2d');
+
+    let initSize = () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+
+        cv.width = width;
+        cv.height = height;
+
+        ctnX = width / 2;
+        ctnY = height / 2;
+
+        teleScopeR = width > height ? width / 10 : height / 10;
+
+        start();
+    };
+
+    let teleScope = (e) => {
+        let x, y;
+
+        try {
+            x = e.clientX;
+            y = e.clientY;
+        } catch (error) {
+            x = ctnX;
+            y = ctnY;
+        }
+
+        // 画面全体を黒くする
+        ctx.clearRect(0, 0, cv.width, cv.height);
+
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, cv.width, cv.height);
+
+        // 円形の穴をくり抜く
+        ctx.globalCompositeOperation = "destination-out";
+
+        ctx.beginPath();
+        ctx.arc(x, y, teleScopeR, 0, 2 * Math.PI, false);
+        ctx.fill();
+
+        // 描画モードを元に戻す
+        ctx.globalCompositeOperation = "source-over";
+    };
+
+    let drawBackground = () => {
+        ctx.fillStyle = '#20265C';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        drawStar();
+        drawMoon();
+    };
+
+    let drawStar = () => {
+        for (let i = 0; i < starMax; i++) {
+            ctx.save();
+            ctx.restore();
+        }
+    };
+
+    let starDetail = (idx) => {
+        ctx.fillStyle = "#FFF";
+        ctx.strokeStyle = "#FFF";
+        ctx.save();
+
+        let x, y;
+
+        if (starOffset.length < starMax) {
+            x = cv.width * Math.random();
+            y = cv.height * Math.random();
+            starOffset.push({'x': x, 'y': y});
+        } else {
+            x = starOffset[idx].x;
+            y = starOffset[idx].y;
+        }
+
+        ctx.translate(x, y);
+
+        let r = Math.random() * 5;
+        ctx.beginPath();
+        ctx.moveTo(r, 0);
+
+        for (let i = 0; i < 9; i++) {
+            ctx.rotate(2 * Math.PI / 5);
+
+            if (i % 2 == 0) {
+                ctx.lineTo((r / 0.5) * 0.2, 0);
+            } else {
+                ctx.lineTo(r, 0);
+            }
+        }
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+    };
+
+    let drawMoon = () => {
+        ctx.save();
+
+        let r = cv.width > cv.height ? cv.width / 10 : cv.height / 10;
+
+        ctx.beginPath();
+        ctx.arc(r, r, r, 2 * Math.PI, false);
+        ctx.fill();
+
+        ctx.restore();
+    };
+
+    let start = (e) => {
+        teleScope(e);
+    };
+
+    return {
+        run: () => {
+            initSize();
+
+            window.addEventListener('mousemove', start);
+            window.addEventListener('resize', initSize);
+        }
+    };
+
+})(window);
+
+App.run();
+
+    </script>
+
+
+</body>
+</html>
