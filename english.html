@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一字の扉</title>
+    <!-- Google Fontsの読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&family=Noto+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="english.css">
+</head>
+<body>
+
+    <!-- ２段階でやさしく開く扉の構造 -->
+    <div class="opening-title">一字の扉</div>
+    <div class="opening-door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <!-- メニューボタン -->
+    <div class="menu-trigger" id="menuTrigger">
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- 全画面メニュー -->
+    <nav class="smart-menu-overlay" id="menuOverlay">
+        <ul>
+            <li><a href="#top" class="menu-item">top</a></li>
+            <li><a href="#about" class="menu-item">about</a></li>
+            <li><a href="#origin" class="menu-item">Japanese language</a></li>
+            <li><a href="#kanji" class="menu-item">One character</a></li>
+            <li><a href="index.html" class="menu-item">japanese</a></li>
+        </ul>
+    </nav>
+
+    <!-- 1画面目：タイトル（トップ） -->
+    <section class="section title-section" id="top">
+        <div class="vertical-text">一字の扉</div>
+        <div class="meaning">A Single-Character Door</div>
+    </section>
+
+    <!-- 2画面目：サイトについて -->
+    <section class="section about-section" id="about">
+        <div class="about-container">
+            <h2 class="vertical-text about-title">about</h2>
+            <div class="vertical-text about-body">
+                <p>On this site, you can learn about terms unique to the Japanese language—specifically <br>
+                    「ことわざ」 kotowaza,<br>
+                    「四字熟語」 yojijukugo,<br>
+                    「大和言葉」 Yamato kotoba,<br>
+                    「オノマトペ」 onomatopoeia<br>
+                    —in an experiential way, starting from a single kanji character and engaging your senses of sight and hearing.
+                    On each page, the illustrations evolve in response to the words presented, and clicking on them reveals the meaning of the term.</p>
+                <br>
+                <p>Creator Akari</p>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- 3画面目：言葉の種類と解説セクション -->
+    
+<!-- 3画面目：言葉の種類と解説セクション -->
+    <section class="section words-section" id="origin">
+        <!-- 最初から active を付与して表示させておく -->
+        <div class="explanation-panel active" id="explanationPanel">
+            <!-- ことわざに最初から active を付与 -->
+            <div class="explanation-content active" id="content-kotowaza">
+                <h3>【ことわざ kotowaza】</h3>
+                <p>A short, traditional saying, widely known among the public, that often contains a moral lesson or a satirical observation.</p>
+            </div>
+            <div class="explanation-content" id="content-yamato">
+                <h3>【大和言葉 Yamato kotoba】</h3>
+                <p>Words that are originally from Japanese and are not borrowed from Chinese or other languages.</p></div>
+
+            <div class="explanation-content" id="content-yoji">
+                <h3>【四字熟語 yojijukugo】</h3>
+                <p>A phrase made up of four kanji characters, often used to express a specific meaning or idea.</p>
+            </div>
+
+            <div class="explanation-content" id="content-onomato">
+                <h3>【オノマトペ onomatopoeia】</h3>
+                <p>Words that imitate sounds or describe how things look, feel, move, or behave. </div>
+                    </div>
+
+        <div class="vertical-text words-container">
+            <div class="word-item active" data-target="kotowaza">kotowaza</div>
+            <div class="word-item" data-target="yamato">Yamatokotoba</div>
+            <div class="word-item" data-target="yoji">yojijukugo</div>
+            <div class="word-item" data-target="onomato">onomatopoeia</div>
+        </div>
+    </section>
+
+
+      <!-- 1画面目：星 -->
+    <section class="section kanji-section" id="kanji">
+        <div class="kanji-container">
+            <a href="star/english star.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">hoshi</span>
+                    <span class="kanji">星</span>
+                </div>
+            </a>
+            <div class="meaning">star</div>
+        </div>
+    </section>
+
+
+     <!-- 2画面目：雨 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="rain/english rain.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">ame</span>
+                    <span class="kanji">雨</span>
+                </div>
+            </a>
+            <div class="meaning">rain</div>
+        </div>
+    </section>
+
+
+        <!-- 3画面目：山 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="mountain/english mountain.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">yama</span>
+                    <span class="kanji">山</span>
+                </div>
+            </a>
+            <div class="meaning">mountain</div>
+        </div>
+    </section>
+
+
+    <!-- 4画面目：花 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="flower/english flower.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">hana</span>
+                    <span class="kanji">花</span>
+                </div>
+            </a>
+            <div class="meaning">flower</div>
+        </div>
+    </section>
+
+    <!-- 5画面目：海 -->
+    <section class="section kanji-section">
+        <div class="kanji-container">
+            <a href="sea/english sea.html" class="kanji-link">
+                <div class="kanji-wrap">
+                    <span class="yomi">umi</span>
+                    <span class="kanji">海</span>
+                </div>
+            </a>
+            <div class="meaning">ocean</div>
+        </div>
+    </section>
+
+    <footer class="footer-section"></footer>
+
+    <script>
+        // 丁寧な2段階オープニングモーションの制御
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. まず中央のタイトルをふんわり出す
+            setTimeout(() => {
+                document.body.classList.add('start-title');
+            }, 300);
+
+            // 2. タイトルを静かに消す
+            setTimeout(() => {
+                document.body.classList.add('fade-title');
+            }, 1600);
+
+            // 3. 最後に扉が左右に開く
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 2100);
+        });
+
+        // メニュー開閉用
+        const trigger = document.getElementById('menuTrigger');
+        const overlay = document.getElementById('menuOverlay');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        function toggleMenu() {
+            trigger.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        trigger.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+
+        // ホバーによる解説パネル制御
+        // ホバーによる解説パネル制御（中央ふわっと切り替え版）
+        const wordItems = document.querySelectorAll('.word-item');
+        const contents = document.querySelectorAll('.explanation-content');
+
+        wordItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const targetId = item.getAttribute('data-target');
+                
+                // すべての選択状態と解説コンテンツを一旦クリア
+                wordItems.forEach(w => w.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+                
+                // ホバーしたアイテムと対応する解説をアクティブにする
+                item.classList.add('active');
+                const targetContent = document.getElementById(`content-${targetId}`);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
